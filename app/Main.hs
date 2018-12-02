@@ -1,15 +1,19 @@
 module Main where
 
-import Day1
+import qualified Day1 as D1
+import qualified Day2 as D2
 
 main :: IO ()
-main = part2Program "src/day1.input" >>= (putStrLn.show)
+main = day2Part1Program "src/day2.input" >>= (putStrLn.show)
 
-part1Program :: FilePath -> IO Int
-part1Program = (fmap part1).fetchInput
+day1Part1Program :: FilePath -> IO Int
+day1Part1Program = (fmap D1.part1).fetchInput
 
-part2Program :: FilePath -> IO Int
-part2Program = (fmap $ part2).fetchInput
+day1Part2Program :: FilePath -> IO Int
+day1Part2Program = (fmap $ D1.part2).fetchInput
+
+day2Part1Program :: FilePath -> IO Int
+day2Part1Program path = (D2.part1.lines) <$> readFile path
 
 fetchInput :: FilePath -> IO [Int]
 fetchInput path = do
