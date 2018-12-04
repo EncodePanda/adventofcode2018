@@ -2,6 +2,8 @@ module Day3 where
 
 import NanoParser
 import Data.Maybe
+import qualified Data.Set as Set
+
 data ClaimDesc = ClaimDesc Int Int Int Int Int
   deriving (Show, Eq)
 newtype Point = Point (Int, Int)
@@ -59,3 +61,19 @@ part1 w t lines  =
       | drop 1 (claim point) == [] = 0
       | otherwise = 1
 
+type Candidate = (Id, [Point])
+
+part2 :: Int -> Int -> [String] -> Int
+part2 w t lines =
+  (fst
+  . head
+  . filter ((1 ==) . Set.size . snd)
+  . fmap checkClaim
+  . candidates) lines
+  where
+    fabric = emptyFabric w t
+    claim = parseLines (fmap parseClaimDesc lines)
+    candidates = fmap (candidate.parseClaimDesc)
+    candidate (ClaimDesc id le te w t) = (id, [Point (x, y) | x <- [le..(le+w-1)], y <- [te..(te+t-1)]])
+    checkClaim :: Candidate -> (Id, Set.Set Id)
+    checkClaim (id, pts) = (id, Set.fromList $ pts >>= claim)
